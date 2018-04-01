@@ -1,0 +1,47 @@
+<!doctype html>{% load static %}
+<html lang="en">
+
+<head>
+  {% block meta %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> {% endblock meta %}
+
+  <title>{% block title %}Bem vindo{% endblock title %}</title>
+</head>
+
+<body>
+  {% block body %}
+  <div id="app">
+    <h3>Total de produtos: <span v-if="produtos.results">[[ produtos.results.length ]]</span> <button @click="removerTodos()">remover todos</button></h3>
+    <table>
+      <tbody>
+        <tr v-for="p in produtos.results" :key="p.id">
+          <td>[[ p.nome ]]</td>
+          <td>[[ p.preco ]]</td>
+          <td><button @click="removerProdutoConfirmacao(p)">remover</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <form novalidate>
+      <div>
+        <input type="text" ref="nome" name="nome" v-model="produto.nome" v-validate.initial="'required'" placeholder="Nome do produto" autofocus="autofocus">
+      </div>
+      <div>
+        <input type="text" name="preço" v-model="produto.preco" v-validate.initial="'required'" placeholder="Preço do produto">
+      </div>
+      <hr>
+      <button @click.prevent="salvarProduto" :disabled="errors.any()">Salvar produto</button>
+    </form>
+  </div>
+  {% endblock body %}
+
+  <script src="{% static 'vue/dist/vue.min.js' %}"></script>
+  <script src="{% static 'axios/dist/axios.min.js' %}"></script>
+  <script src="{% static 'vee-validate/dist/vee-validate.min.js' %}"></script>
+  <script src="{% static 'lodash/lodash.min.js' %}"></script>
+  <script src="{% static 'app/main.js' %}"></script>
+</body>
+
+</html>
