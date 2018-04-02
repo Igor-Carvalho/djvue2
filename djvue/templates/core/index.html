@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% load static %}
+
+{% block local_scripts %}
+  {{ block.super }}
+  <script src="{% static 'app/core/paginator.js' %}"></script>
+  <script src="{% static 'app/core/index.js' %}"></script>
+  <script>
+    window.addEventListener('load', function () {
+      new Vue({
+        el: '#app',
+      });
+    })
+  </script>
+{% endblock local_scripts %}
+
+{% block body %}
+  <div id="app">
+    <index>index here</index>
+  </div>
+
+  <a href="{% url 'index' %}">home</a>
+{% endblock body %}

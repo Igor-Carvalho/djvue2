@@ -1,10 +1,20 @@
 """Views da aplicação core."""
 
 from django.contrib import auth
+from django.views import generic
 from rest_framework import permissions, serializers, viewsets
 
-from . import models
+from . import models, pagination
 from .serializers import UserSerializer
+
+
+class IndexView(generic.TemplateView):
+    """TODO."""
+
+    template_name = 'core/index.html'
+
+
+index = IndexView.as_view()
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -30,3 +40,4 @@ class ProdutoViewSet(viewsets.ModelViewSet):
 
     serializer_class = ProdutoSerializer
     queryset = models.Produto.objects.all()
+    pagination_class = pagination.CorePaginator

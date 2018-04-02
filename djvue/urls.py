@@ -10,6 +10,7 @@ from . import routes, views
 urlpatterns = [
     urls.url(r'^$', views.index, name='index'),
     urls.url(r'^contas/', urls.include('allauth.urls')),
+    urls.url(r'^core/', urls.include('core.urls', namespace='core')),
     urls.url(r'^api/v1/', routes.urls),
     urls.url(r'^api-auth/', urls.include('rest_framework.urls', namespace='rest_framework')),
     urls.url(r'^admin/', admin.site.urls),
