@@ -1,7 +1,8 @@
-window.addEventListener('load', load);
-
-function load() {
+(function () { 'use strict';
   Vue.component('paginador', {
+    template: `<div>
+  <span v-for="i in pageRange" v-on:click="carregar(i)" :key="i" class="pointer">[[ i ]] </span>
+</div>`,
     delimiters: ['[[', ']]'],
     props: ['pageRange'],
     data: function () {
@@ -13,9 +14,6 @@ function load() {
         var self = this;
         self.$emit('carregar', page)
       }
-    },
-    template: `<div>
-  <span v-for="i in pageRange" v-on:click="carregar(i)" :key="i" class="pointer">[[ i ]] </span>
-</div>`
+    }
   });
-}
+})();

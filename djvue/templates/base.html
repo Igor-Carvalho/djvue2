@@ -9,16 +9,18 @@
 
   <title>{% block title %}Bem vindo{% endblock title %}</title>
 
+  <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/base.css' %}">
   
   {% block scripts %}
     <script src="{% static 'vue/dist/vue.min.js' %}"></script>
-    <script src="{% static 'axios/dist/axios.min.js' %}"></script>
+    <script src="{% static 'vue-resource/dist/vue-resource.min.js' %}"></script>
     <script src="{% static 'vee-validate/dist/vee-validate.min.js' %}"></script>
     <script src="{% static 'lodash/lodash.min.js' %}"></script>
+    <script src="{% static 'app/core/produtos.js' %}"></script>
     <script src="{% static 'app/main.js' %}"></script>
   {% endblock scripts %}
-  
+
   {% block local_scripts %}{% endblock local_scripts %}
 </head>
 

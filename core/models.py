@@ -38,7 +38,7 @@ class Produto(TimeStampedModel):
     class Meta:
         """Meta opções do modelo."""
 
-        ordering = ['id']
+        ordering = ['-id']
 
     def __str__(self):
         """toString."""

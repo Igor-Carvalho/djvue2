@@ -1,19 +1,19 @@
-window.addEventListener('load', load);
-
-function load() {
-  Vue.component('index', {
+(function () { 'use strict';
+  Vue.component('produtos', {
     template: `<div>
+  <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw" v-if="loading"></i>
   <h3>Total de produtos: <span v-if="produtos.results">[[ produtos.results.length ]]</span> <button @click="removerTodos()">remover todos</button></h3>
   <form style="width: 30%" novalidate>
     <div>
       <input type="text" ref="nome" name="nome" v-model="produto.nome" v-validate.initial="'required'" placeholder="Nome do produto" autofocus="autofocus">
+      <p v-if="serverErrors.nome">[[ serverErrors.nome[0] ]]</p>
     </div>
     <div>
       <input type="text" name="preço" v-model="produto.preco" v-validate.initial="'required'" placeholder="Preço do produto">
       <p v-if="serverErrors.preco">[[ serverErrors.preco[0] ]]</p>
     </div>
     <hr>
-    <button @click.prevent="salvarProduto" :disabled="errors.any()">Salvar produto</button>
+    <button @click.prevent="salvarProduto">[[ produto.id ? 'Atualizar' : 'Salvar' ]]</button>
   </form>
 
   <table style="margin-top: 20px;">
@@ -21,7 +21,10 @@ function load() {
       <tr v-for="p in produtos.results" :key="p.id">
         <td>[[ p.nome ]]</td>
         <td>[[ p.preco ]]</td>
-        <td><button @click="removerProdutoConfirmacao(p)">remover</button></td>
+        <td>
+          <button @click="editarProduto(p)">editar</button>
+          <button @click="removerProdutoConfirmacao(p)">remover</button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -31,6 +34,7 @@ function load() {
     delimiters: ['[[', ']]'],
     data: function () {
       return {
+        loading: false,
         produtos: [],
         produto: {
           nome: '',
@@ -44,27 +48,34 @@ function load() {
       obterProdutos: function (page) {
         var self = this;
         self.page = page;
-        axios.get('/api/v1/produtos/', {params: {page: self.page}}).then(sucesso);
+        self.$Produtos.carregarProdutos(page, function () {
+          self.loading = true;
+        }).then(sucesso);
 
         function sucesso(response) {
+          self.loading = false;
           self.produtos = response.data;
         }
       },
       salvarProduto: function () {
         var self = this;
         self.serverErrors = {};
-        
-        axios.post('/api/v1/produtos/', self.produto).then(sucesso).catch(erro);
+
+        self.$Produtos.salvarProduto(self.produto).then(sucesso).catch(erro);
 
         function sucesso(response) {
-          self.produtos.results.push(response.data);
           self.produto = {};
           self.$refs.nome.focus();
+          self.obterProdutos(self.page);
         }
 
         function erro(error) {
-          self.serverErrors = error.response.data;
+          self.serverErrors = error.body;
         }
+      },
+      editarProduto: function (produto) {
+        this.$refs.nome.focus();
+        this.produto = Object.assign({}, produto);
       },
       removerProdutoConfirmacao: function (produto) {
         var self = this;
@@ -75,13 +86,9 @@ function load() {
       removerProduto: function (produto) {
         var self = this;
 
-        axios.delete('/api/v1/produtos/' + produto.id + '/').then(sucesso);
+        this.$Produtos.removerProduto(produto).then(sucesso);
 
         function sucesso() {
-          var index = _.findIndex(self.produtos.results, function (p) {
-            return p.id === produto.id;
-          });
-
           self.obterProdutos(self.page);
           self.$refs.nome.focus();
         }
@@ -101,4 +108,4 @@ function load() {
       self.$refs.nome.focus();
     }
   });
-}
+})();

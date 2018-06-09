@@ -1,8 +1,8 @@
-window.addEventListener('load', load);
-
-function load() {
-  axios.defaults.xsrfCookieName = 'csrftoken';
-  axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-
+(function () { 'use strict';
   Vue.use(VeeValidate);
-}
+  Vue.use(VueResource);
+  Vue.use(Produtos);
+
+  Vue.http.headers.common['xsrfCookieName'] = 'csrftoken';
+  Vue.http.headers.common['xsrfHeaderName'] = 'X-CSRFToken';
+})();
